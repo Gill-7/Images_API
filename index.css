@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css?family=Permanent+Marker");
+
 
 body {
   background: #51bbc9;
@@ -7,7 +9,6 @@ body {
 
 h1 {
   position: relative;
-
 }
 
 h1::before {
@@ -44,6 +45,7 @@ button {
   padding: 30px 40px;
   border-radius: 10px;
   border: 3px solid black;
+  font-family: "Permanent Marker";
   margin-bottom: 60px;
   background: whitesmoke;
 }
