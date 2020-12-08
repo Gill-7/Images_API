@@ -1,36 +1,53 @@
-const setupDiv = document.getElementById('setup')
-const punchlineDiv = document.getElementById('punchline')
-const punchlineBtn = document.getElementById('punchlineBtn')
-const newJokeBtn = document.getElementById('newJokeBtn')
+let active = 0
+let lights = document.querySelectorAll('.circle')
 
-let punchline;
-
-punchlineBtn.addEventListener('click', getPunchline)
-
-newJokeBtn.addEventListener('click', getJoke);
-
-
-function getPunchline() {
-    punchlineDiv.innerHTML = punchline;
-    punchlineDiv.classList.add('bubble');
-    punchlineBtn.classList.toggle('hidden');
-    newJokeBtn.classList.toggle('hidden');
+const switchLight = (currentLight) => {
+    currentLight.classList.add(currentLight.getAttribute('color'));
 }
 
-async function getJoke() {
-    const jokePromise = await fetch('https://official-joke-api.appspot.com/jokes/programming/random')
-    const joke = await jokePromise.json();
-
-    setupDiv.innerHTML = joke[0].setup;
-    
-    punchline = joke[0].punchline;
-
-    punchlineDiv.innerHTML = '';
-    punchlineDiv.classList.remove('bubble');
-
-
-    punchlineBtn.classList.toggle('hidden');
-    newJokeBtn.classList.toggle('hidden');
-   
+const turnOffLight = (currentLight) => {
+    currentLight.className = 'circle'
 }
-getJoke()
+
+const changeLight = () => {
+    return new Promise( (res, rej) => {
+        let currentLight = lights[active]
+        if (active===0) {
+            switchLight(currentLight)
+            setTimeout(()=> {
+                turnOffLight(currentLight)
+                active = 1
+                res(active)
+            },1000)
+            console.log(active)
+        }
+        if (active===1) {
+            switchLight(currentLight)
+            setTimeout(()=> {
+                turnOffLight(currentLight)
+                active = 2
+                res(active)
+            },1000)
+            console.log(active)
+        }
+        if (active===2) {
+            switchLight(currentLight)
+            setTimeout(()=> {
+                turnOffLight(currentLight)
+                active = 0
+                res(active)
+            },1000)
+            console.log(active)
+        }
+    })
+}
+
+(async function() {
+    try{
+       await changeLight()
+       await changeLight()
+       await changeLight()
+    }catch(err){
+        console.log(err)
+    }
+})();
