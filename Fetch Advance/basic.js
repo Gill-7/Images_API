@@ -1,30 +1,32 @@
-const uploadForm = document.getElementById('uploadForm')
+const url = 'https://pixabay.com/api/?key=19491910-8bdc0987f571058529ab6f874&q=countryside'
 
-uploadForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    uploadFile(this);
-})
-
-async function uploadFile(data) {
-    const formData = new FormData();
-    const files = data.querySelector('input[type="file"]').files;
+async function getImages() {
+    const imagePromise = await fetch(url);
+    const images =  await imagePromise.json(); 
     
-    for(let i=0; i<files.length; i++) {
-        formData.append(`fileInput_${i}`, files[i]);
-    }
+    const imageDiv = document.querySelector('.img')
+    let imageHtml = '';
+    
+    console.log(images.hits[0])
 
-    const options = {
-        method: 'POST',
-        body: formData
-    };
+    images.hits.slice(0,40).forEach(image => {
+        imageHtml += `
+            <div class='image-wrapper card'>
+                <div class='image'>
+                    <img class='image__img' src='${image.previewURL}'>
+                    <span class='image_info'>
+                        <h3>OPI: ${image.tags}</h3>
+                        <span>Size: ${image.imageSize}</span>
+                    </span>
+                    
+                </div>
 
-    const uploadPromise = await fetch('https://httpbin.org/post', options)
+                
+            </div>
+            `;
+    });
+    imageDiv.innerHTML = imageHtml
 
-    if(uploadPromise.ok) {
-        const uploadResponse = await uploadPromise.json();
-        console.log(uploadResponse.files)
-    } else {
-        console.error(uploadPromise.status)
-    }
 }
+
+getImages()
